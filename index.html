@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>运动刑场 · 花式嘲讽打卡器</title>
     <style>
         * {
@@ -96,9 +96,11 @@
             font-size: 0.9rem;
         }
         .proof-img {
-            max-width: 60px;
+            max-width: 50px;
+            max-height: 50px;
             border-radius: 12px;
             margin-left: 8px;
+            object-fit: cover;
         }
         hr {
             border-color: #334155;
@@ -131,7 +133,7 @@
         </div>
         <div id="tempMemberList"></div>
         <button id="createRoomBtn">🎉 成立刑房 & 开始打卡</button>
-        <div class="warning">💡 拍照证明你的汗水！系统自动生成嘲讽报告一键复制到微信群</div>
+        <div class="warning">💡 点击打卡+传图，可从相册选择运动照片证明！</div>
     </div>
 
     <!-- 打卡主面板 -->
@@ -176,13 +178,11 @@
         return Math.random().toString(36).substring(2, 8).toUpperCase();
     }
 
-    // 当前时间字符串 "HH:MM"
     function getCurrentTimeStr() {
         let d = new Date();
         return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
     }
 
-    // 计算已经开始了多少小时 (基于打卡时间)
     function getHoursSinceCheckin(checkinTimeStr) {
         if(!checkinTimeStr) return null;
         let now = new Date();
@@ -195,7 +195,7 @@
         return diffHours;
     }
 
-    // 渲染成员+打卡+拍照证明
+    // 渲染成员+打卡+拍照证明（相册上传版）
     function renderMain() {
         if(!currentRoom) return;
         document.getElementById('roomTitle').innerHTML = `🏟️ ${escapeHtml(currentRoom.name)}`;
@@ -212,13 +212,13 @@
             let hoursAgo = (isChecked && checkTime) ? getHoursSinceCheckin(checkTime) : null;
             let proofUrl = checkRecord ? checkRecord.proof : null;
             
-            // 状态显示
             let statusHtml = '';
             if(isChecked) {
                 statusHtml = `<span style="color:#4ade80;">✅ 已完成 ${hoursAgo}小时前完成</span>`;
-                if(proofUrl) statusHtml += `<img src="${proofUrl}" class="proof-img" onclick="alert('打卡证明')">`;
+                if(proofUrl) {
+                    statusHtml += `<img src="${proofUrl}" class="proof-img" onclick="alert('打卡证明')" style="vertical-align:middle;">`;
+                }
             } else {
-                // 未打卡的人，显示其他玩家的最早打卡时间
                 let othersDone = members.filter(m => {
                     let rec = m.checkIns[todayStr];
                     return rec && rec.done === true && rec.time;
@@ -233,46 +233,67 @@
                 statusHtml = `<span style="color:#facc15;">❌ 未打卡 · ${inspire}</span>`;
             }
             
+            // 生成唯一ID用于文件上传
+            const inputId = `fileInput_${Date.now()}_${member.name.replace(/[^a-z0-9]/gi,'')}`;
             return `
                 <div class="member-row" data-name="${escapeHtml(member.name)}">
                     <div style="flex:2">
                         <strong>${escapeHtml(member.name)}</strong><br>
                         <span class="time-badge">${statusHtml}</span>
                     </div>
-                    <div class="flex" style="flex-wrap:nowrap;">
-                        ${!isChecked ? `<button class="check-btn btn-small" data-action="check" data-name="${escapeHtml(member.name)}">📸 打卡+拍照</button>` : `<button class="check-btn btn-small checked-btn" disabled>✅ 已打卡</button>`}
+                    <div>
+                        ${!isChecked ? `
+                            <input type="file" accept="image/*" capture="environment" style="display:none;" id="${inputId}" data-name="${escapeHtml(member.name)}">
+                            <button class="check-btn btn-small" data-action="check" data-inputid="${inputId}" data-name="${escapeHtml(member.name)}">📸 打卡+传图</button>
+                        ` : `<button class="check-btn btn-small checked-btn" disabled>✅ 已打卡</button>`}
                     </div>
                 </div>
             `;
         }).join('');
         
-        // 绑定打卡事件
+        // 绑定打卡事件（新版文件上传）
         document.querySelectorAll('[data-action="check"]').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
+            // 移除旧的listener避免重复
+            btn.removeEventListener('click', window._checkHandler);
+            const handler = async (e) => {
                 let name = btn.getAttribute('data-name');
-                if(name && currentRoom.members[name]) {
-                    // 模拟拍照：使用prompt模拟图片URL（实际可换成文件上传）
-                    let imgUrl = prompt("📸 上传运动证明：粘贴图片网址 或 输入'汗水自拍'", "https://picsum.photos/80/80?random="+Math.random());
-                    if(imgUrl) {
-                        let today = new Date().toISOString().slice(0,10);
-                        let nowTime = getCurrentTimeStr();
-                        if(!currentRoom.members[name].checkIns[today]) currentRoom.members[name].checkIns[today] = {};
-                        currentRoom.members[name].checkIns[today].done = true;
-                        currentRoom.members[name].checkIns[today].time = nowTime;
-                        currentRoom.members[name].checkIns[today].proof = imgUrl;
-                        // 扣分逻辑：之前没打卡现在补上？不需要扣分。只有未打卡的人才会在结算/报告时扣分
-                        saveRoom();
-                        renderMain();
-                        alert(`🎉 ${name} 完成打卡！证明已贴，避免了社死。`);
+                let inputId = btn.getAttribute('data-inputid');
+                if(name && currentRoom.members[name] && inputId) {
+                    const fileInput = document.getElementById(inputId);
+                    if(fileInput) {
+                        fileInput.click();  // 弹出相册/相机选择
+                        fileInput.onchange = (event) => {
+                            const file = event.target.files[0];
+                            if(file) {
+                                const reader = new FileReader();
+                                reader.onload = function(ev) {
+                                    let imgUrl = ev.target.result;  // base64图片
+                                    let today = new Date().toISOString().slice(0,10);
+                                    let nowTime = getCurrentTimeStr();
+                                    if(!currentRoom.members[name].checkIns[today]) currentRoom.members[name].checkIns[today] = {};
+                                    currentRoom.members[name].checkIns[today].done = true;
+                                    currentRoom.members[name].checkIns[today].time = nowTime;
+                                    currentRoom.members[name].checkIns[today].proof = imgUrl;
+                                    saveRoom();
+                                    renderMain();
+                                    alert(`🎉 ${name} 完成打卡！运动证明已上传，避免了社死。`);
+                                };
+                                reader.readAsDataURL(file);
+                            } else {
+                                alert("未选择图片，打卡失败");
+                            }
+                        };
                     } else {
-                        alert("无图无真相，打卡失败 😭");
+                        alert("请重试");
                     }
                 }
-            });
+            };
+            btn.addEventListener('click', handler);
+            window._checkHandler = handler;
         });
     }
 
-    // 生成嘲讽报告（自动整理未打卡玩家 + 有趣emoji）
+    // 生成嘲讽报告
     function generateRoastReport() {
         if(!currentRoom) return;
         let today = new Date().toISOString().slice(0,10);
@@ -292,7 +313,6 @@
             return "🎉 全员卷王！今天没人偷懒！继续保持！ 🎉";
         }
         
-        // 有趣的嘲讽词库
         let roasts = [
             "🤡 懒虫特工队", "🦥 树懒都比你们快", "🍗 是不是在偷吃炸鸡？", "📉 运动KPI负数", 
             "💩 打卡失败 × 核能警告", "👻 你们的腿是租来的吗？", "⚰️ 躺平区UP主", 
@@ -305,8 +325,7 @@
         report += `\n💩 未打卡的懒虫 (${notDoneList.length}人)：\n`;
         notDoneList.forEach(n => { report += `❌ ${n}  🙈\n`; });
         report += `\n🔨 惩罚：每人扣除 ${currentRoom.penaltyPoints} 信誉分！\n`;
-        report += `🤣 ${randomRoast} 请以上懒虫自觉群里发红包/请奶茶!\n`;
-        report += `📸 还不快去运动？打卡入口在“刑场”App！`;
+        report += `🤣 ${randomRoast} 请以上懒虫自觉群里发红包/请奶茶!\n📸 还不快去运动？打卡入口在“刑场”App！`;
         return report;
     }
     
@@ -323,13 +342,11 @@
         });
     }
 
-    // 新赛季/重置当天打卡（保留成员和积分池）
     function resetSeason() {
         if(!currentRoom) return;
         if(confirm("⚡ 开始新的一轮？当日所有未打卡玩家将立刻扣除惩罚分，并重置打卡状态。")) {
             let today = new Date().toISOString().slice(0,10);
             let members = Object.values(currentRoom.members);
-            // 扣分：未打卡的扣分
             members.forEach(m => {
                 let rec = m.checkIns[today];
                 let isDone = rec && rec.done === true;
@@ -337,7 +354,6 @@
                     m.creditScore = (m.creditScore || 100) - currentRoom.penaltyPoints;
                     if(m.creditScore < 0) m.creditScore = 0;
                 }
-                // 重置打卡记录
                 m.checkIns = {};
             });
             saveRoom();
@@ -346,7 +362,6 @@
         }
     }
 
-    // 创建房间
     function createRoom() {
         let name = document.getElementById('roomName').value.trim() || "运动刑场";
         let penalty = parseInt(document.getElementById('penaltyPoints').value);
@@ -361,7 +376,9 @@
             };
         });
         let today = new Date().toISOString().slice(0,10);
-        for(let n in membersObj) { membersObj[n].checkIns[today] = { done: false, time: null, proof: null }; }
+        for(let n in membersObj) { 
+            membersObj[n].checkIns[today] = { done: false, time: null, proof: null }; 
+        }
         currentRoom = {
             id: generateId(),
             name: name,
@@ -375,7 +392,6 @@
         renderMain();
     }
 
-    // 渲染临时列表
     function renderTempMembers() {
         let container = document.getElementById('tempMemberList');
         if(pendingMembers.length === 0) { container.innerHTML = "<div>➕ 添加2人以上</div>"; return; }
@@ -389,7 +405,15 @@
         });
     }
     
-    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+    function escapeHtml(str) { 
+        if(!str) return ''; 
+        return str.replace(/[&<>]/g, function(m){ 
+            if(m==='&') return '&amp;'; 
+            if(m==='<') return '&lt;'; 
+            if(m==='>') return '&gt;'; 
+            return m;
+        }); 
+    }
 
     // 初始化事件
     document.getElementById('addMemberBtn').addEventListener('click', () => {
