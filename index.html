@@ -2,380 +2,418 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>运动打卡·对赌小分队</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>运动刑场 · 花式嘲讽打卡器</title>
     <style>
         * {
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
-            background: #f1f5f9;
-            margin: 0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            background: #0f172a;
             padding: 16px;
-            color: #0f172a;
+            color: #f1f5f9;
         }
         .container {
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
         }
         .card {
-            background: white;
-            border-radius: 28px;
+            background: #1e293b;
+            border-radius: 32px;
             padding: 20px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            transition: all 0.2s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            border: 1px solid #334155;
         }
-        h1 {
-            font-size: 1.8rem;
-            margin: 0 0 8px 0;
+        h1, h2 {
+            margin: 0 0 12px 0;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        h2 {
-            font-size: 1.3rem;
-            margin: 0 0 12px 0;
-        }
-        .badge {
-            background: #dcfce7;
-            color: #15803d;
-            padding: 4px 12px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        input, button {
-            font-size: 1rem;
+        button, input, textarea, select {
+            background: #0f172a;
+            border: 1px solid #475569;
+            color: white;
+            padding: 12px 16px;
             border-radius: 60px;
-            padding: 12px 18px;
-            border: 1px solid #e2e8f0;
-            background: white;
+            font-size: 0.9rem;
             width: 100%;
             margin-bottom: 12px;
             font-family: inherit;
         }
         button {
             background: #3b82f6;
-            color: white;
-            font-weight: 600;
             border: none;
+            font-weight: bold;
             cursor: pointer;
-            transition: 0.2s;
-            width: auto;
-            padding: 10px 20px;
+            transition: 0.1s;
         }
         button:active {
             transform: scale(0.97);
-            background: #2563eb;
         }
-        .btn-outline {
-            background: white;
-            border: 1px solid #3b82f6;
-            color: #3b82f6;
+        .btn-small {
+            width: auto;
+            padding: 6px 14px;
+            font-size: 0.8rem;
         }
-        .btn-danger {
-            background: #ef4444;
-        }
-        .member-list {
-            margin: 16px 0;
-        }
-        .member-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #f8fafc;
-            border-radius: 60px;
-            padding: 8px 16px;
-            margin-bottom: 8px;
-        }
-        .check-btn {
-            background: #e2e8f0;
-            color: #1e293b;
-            padding: 6px 16px;
-            font-size: 0.85rem;
-            margin: 0;
-        }
-        .checked {
-            background: #22c55e;
-            color: white;
-        }
-        .stats {
-            font-size: 0.9rem;
-            background: #f1f5f9;
-            padding: 10px 16px;
-            border-radius: 40px;
-            margin: 12px 0;
-        }
-        .flex-row {
+        .flex {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
             align-items: center;
         }
-        hr {
-            margin: 20px 0;
-            border: none;
-            border-top: 1px solid #e2e8f0;
+        .member-row {
+            background: #0f172a;
+            border-radius: 60px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
         }
-        .room-code {
-            background: #eef2ff;
+        .check-btn {
+            background: #334155;
+            margin: 0;
+            width: auto;
+        }
+        .checked-btn {
+            background: #22c55e;
+        }
+        .time-badge {
             font-family: monospace;
-            font-size: 1.3rem;
-            font-weight: bold;
-            text-align: center;
-            padding: 10px;
-            border-radius: 40px;
-            letter-spacing: 2px;
+            font-size: 0.7rem;
+            color: #94a3b8;
         }
-        .footer-tip {
-            font-size: 0.8rem;
-            color: #475569;
-            text-align: center;
+        .roast-text {
+            background: #2d1b2e;
+            border-left: 5px solid #ec489a;
+            padding: 12px;
+            border-radius: 20px;
+            margin: 12px 0;
+            font-size: 0.9rem;
+        }
+        .proof-img {
+            max-width: 60px;
+            border-radius: 12px;
+            margin-left: 8px;
+        }
+        hr {
+            border-color: #334155;
+            margin: 16px 0;
+        }
+        .warning {
+            color: #facc15;
+            font-size: 0.7rem;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="card" style="text-align: center;">
-        <h1>🏸 对赌打卡器</h1>
-        <p>押金20元 · 谁鸽谁发红包 💰</p>
-        <div class="badge">⚡ 纯手工·MVP版</div>
+    <div class="card" style="text-align:center">
+        <h1 style="justify-content:center;">🏃‍♂️💨 运动刑场</h1>
+        <p>规则：未打卡？社死+嘲讽+公开处刑 🤡</p>
     </div>
 
-    <!-- 房间创建 / 加入 -->
-    <div class="card" id="roomSetupPanel">
-        <h2>📢 建立运动赌局</h2>
-        <input type="text" id="roomName" placeholder="局名：周末跑步/羽毛球PK" value="羽毛球复仇局">
-        <div class="flex-row">
-            <input type="text" id="memberNameInput" placeholder="队友昵称 例: 老张" style="flex:2">
-            <button id="addMemberBtn" style="width: auto;">➕ 添加</button>
+    <!-- 创建/设置面板 -->
+    <div class="card" id="setupPanel">
+        <h2>⚙️ 开刑条件</h2>
+        <input type="text" id="roomName" placeholder="局名：羽毛球/跑步/减肥" value="羽毛球复仇局">
+        <div class="flex">
+            <input type="number" id="penaltyPoints" placeholder="惩罚积分/押金(分)" value="20" step="5">
+            <span style="font-size:0.8rem;">💀 未打卡扣分</span>
         </div>
-        <div id="tempMemberList" class="member-list" style="min-height: 60px;"></div>
-        <button id="createRoomBtn">🎲 创建房间 & 开始打卡</button>
-        <div class="footer-tip">👉 把链接/文件发给朋友，每个人自己打卡</div>
+        <div class="flex">
+            <input type="text" id="memberNameInput" placeholder="新队友昵称">
+            <button id="addMemberBtn" class="btn-small">➕ 添加</button>
+        </div>
+        <div id="tempMemberList"></div>
+        <button id="createRoomBtn">🎉 成立刑房 & 开始打卡</button>
+        <div class="warning">💡 拍照证明你的汗水！系统自动生成嘲讽报告一键复制到微信群</div>
     </div>
 
-    <!-- 打卡面板 (动态显示) -->
-    <div id="mainAppPanel" style="display: none;">
+    <!-- 打卡主面板 -->
+    <div id="mainPanel" style="display:none;">
         <div class="card">
-            <div class="flex-row" style="justify-content: space-between;">
-                <h2 id="displayRoomName"></h2>
-                <button id="resetRoomBtn" class="btn-outline" style="background:#f1f5f9;">🔄 新的一局</button>
+            <div class="flex" style="justify-content: space-between;">
+                <h2 id="roomTitle"></h2>
+                <button id="resetBtn" class="btn-small" style="background:#475569;">🔄 新赛季</button>
             </div>
-            <div id="roomCodeDisplay" class="room-code"></div>
-            <div class="stats" id="statsText"></div>
-            <div id="membersCheckList"></div>
+            <div id="penaltyDisplay" class="warning" style="background:#2d2a1e; padding:6px 12px; border-radius:40px;"></div>
+            <div id="membersList"></div>
             <hr>
-            <div class="footer-tip">
-                ✅ 每人每天打卡一次 · 当日未打卡者需按局发红包
+            <div class="flex">
+                <button id="genReportBtn" style="background:#ec489a;">🤡 生成嘲讽报告 (复制去群里)</button>
             </div>
+            <div id="reportPreview" class="roast-text" style="display:none;"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // ---------- 简易存储 ----------
-    let currentRoom = null;       // 当前房间对象
-    let pendingMembers = [];      // 临时成员列表
+    // ---------- 全局数据 ----------
+    let currentRoom = null;
+    let pendingMembers = [];
 
-    function saveRoomToLocal(room) {
-        if(room && room.id) {
-            localStorage.setItem(`room_${room.id}`, JSON.stringify(room));
+    // 辅助函数
+    function saveRoom() {
+        if(currentRoom && currentRoom.id) {
+            localStorage.setItem(`room_${currentRoom.id}`, JSON.stringify(currentRoom));
         }
     }
 
-    function loadRoomFromId(roomId) {
-        const raw = localStorage.getItem(`room_${roomId}`);
+    function loadRoom(id) {
+        let raw = localStorage.getItem(`room_${id}`);
         if(raw) {
-            try {
-                return JSON.parse(raw);
-            } catch(e) { return null; }
+            try { return JSON.parse(raw); } catch(e) { return null; }
         }
         return null;
     }
 
-    function generateRoomId() {
+    function generateId() {
         return Math.random().toString(36).substring(2, 8).toUpperCase();
     }
 
-    // 渲染临时添加成员
-    function renderTempMembers() {
-        const container = document.getElementById('tempMemberList');
-        if(!container) return;
-        if(pendingMembers.length === 0) {
-            container.innerHTML = '<div style="color:#94a3b8; padding: 12px;">👥 还没有队友，添加2人以上即可开战</div>';
-            return;
-        }
-        container.innerHTML = pendingMembers.map((m, idx) => `
-            <div class="member-item">
-                <span>🏅 ${escapeHtml(m.name)}</span>
-                <button class="btn-outline" style="background:#fee2e2; color:#b91c1c; padding:4px 12px;" data-idx="${idx}">移除</button>
-            </div>
-        `).join('');
-        // 绑定移除事件
-        document.querySelectorAll('#tempMemberList .member-item button').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const idx = parseInt(btn.getAttribute('data-idx'));
-                if(!isNaN(idx)) {
-                    pendingMembers.splice(idx,1);
-                    renderTempMembers();
+    // 当前时间字符串 "HH:MM"
+    function getCurrentTimeStr() {
+        let d = new Date();
+        return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+    }
+
+    // 计算已经开始了多少小时 (基于打卡时间)
+    function getHoursSinceCheckin(checkinTimeStr) {
+        if(!checkinTimeStr) return null;
+        let now = new Date();
+        let [hours, minutes] = checkinTimeStr.split(':').map(Number);
+        let checkinDate = new Date();
+        checkinDate.setHours(hours, minutes, 0, 0);
+        let diffMs = now - checkinDate;
+        let diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        if(diffHours < 0) diffHours = 0;
+        return diffHours;
+    }
+
+    // 渲染成员+打卡+拍照证明
+    function renderMain() {
+        if(!currentRoom) return;
+        document.getElementById('roomTitle').innerHTML = `🏟️ ${escapeHtml(currentRoom.name)}`;
+        document.getElementById('penaltyDisplay').innerHTML = `⚡ 当前未打卡惩罚：扣除 ${currentRoom.penaltyPoints} 信誉分 + 群内嘲讽`;
+
+        let members = Object.values(currentRoom.members);
+        let container = document.getElementById('membersList');
+        let todayStr = new Date().toISOString().slice(0,10);
+        
+        container.innerHTML = members.map(member => {
+            let checkRecord = member.checkIns[todayStr];
+            let isChecked = checkRecord && checkRecord.done === true;
+            let checkTime = checkRecord ? checkRecord.time : null;
+            let hoursAgo = (isChecked && checkTime) ? getHoursSinceCheckin(checkTime) : null;
+            let proofUrl = checkRecord ? checkRecord.proof : null;
+            
+            // 状态显示
+            let statusHtml = '';
+            if(isChecked) {
+                statusHtml = `<span style="color:#4ade80;">✅ 已完成 ${hoursAgo}小时前完成</span>`;
+                if(proofUrl) statusHtml += `<img src="${proofUrl}" class="proof-img" onclick="alert('打卡证明')">`;
+            } else {
+                // 未打卡的人，显示其他玩家的最早打卡时间
+                let othersDone = members.filter(m => {
+                    let rec = m.checkIns[todayStr];
+                    return rec && rec.done === true && rec.time;
+                }).map(m => ({ name: m.name, time: m.checkIns[todayStr].time }));
+                let inspire = '';
+                if(othersDone.length > 0) {
+                    let earliest = othersDone.reduce((a,b) => (a.time < b.time ? a : b), othersDone[0]);
+                    inspire = `😱 已经有队友 ${earliest.name} 在 ${earliest.time} 完成了！你还在躺？`;
+                } else {
+                    inspire = `🔥 还没人打卡，抢第一有奖！`;
+                }
+                statusHtml = `<span style="color:#facc15;">❌ 未打卡 · ${inspire}</span>`;
+            }
+            
+            return `
+                <div class="member-row" data-name="${escapeHtml(member.name)}">
+                    <div style="flex:2">
+                        <strong>${escapeHtml(member.name)}</strong><br>
+                        <span class="time-badge">${statusHtml}</span>
+                    </div>
+                    <div class="flex" style="flex-wrap:nowrap;">
+                        ${!isChecked ? `<button class="check-btn btn-small" data-action="check" data-name="${escapeHtml(member.name)}">📸 打卡+拍照</button>` : `<button class="check-btn btn-small checked-btn" disabled>✅ 已打卡</button>`}
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        // 绑定打卡事件
+        document.querySelectorAll('[data-action="check"]').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                let name = btn.getAttribute('data-name');
+                if(name && currentRoom.members[name]) {
+                    // 模拟拍照：使用prompt模拟图片URL（实际可换成文件上传）
+                    let imgUrl = prompt("📸 上传运动证明：粘贴图片网址 或 输入'汗水自拍'", "https://picsum.photos/80/80?random="+Math.random());
+                    if(imgUrl) {
+                        let today = new Date().toISOString().slice(0,10);
+                        let nowTime = getCurrentTimeStr();
+                        if(!currentRoom.members[name].checkIns[today]) currentRoom.members[name].checkIns[today] = {};
+                        currentRoom.members[name].checkIns[today].done = true;
+                        currentRoom.members[name].checkIns[today].time = nowTime;
+                        currentRoom.members[name].checkIns[today].proof = imgUrl;
+                        // 扣分逻辑：之前没打卡现在补上？不需要扣分。只有未打卡的人才会在结算/报告时扣分
+                        saveRoom();
+                        renderMain();
+                        alert(`🎉 ${name} 完成打卡！证明已贴，避免了社死。`);
+                    } else {
+                        alert("无图无真相，打卡失败 😭");
+                    }
                 }
             });
         });
+    }
+
+    // 生成嘲讽报告（自动整理未打卡玩家 + 有趣emoji）
+    function generateRoastReport() {
+        if(!currentRoom) return;
+        let today = new Date().toISOString().slice(0,10);
+        let members = Object.values(currentRoom.members);
+        let doneList = [];
+        let notDoneList = [];
+        members.forEach(m => {
+            let rec = m.checkIns[today];
+            if(rec && rec.done === true) {
+                doneList.push({ name: m.name, time: rec.time });
+            } else {
+                notDoneList.push(m.name);
+            }
+        });
+        
+        if(notDoneList.length === 0) {
+            return "🎉 全员卷王！今天没人偷懒！继续保持！ 🎉";
+        }
+        
+        // 有趣的嘲讽词库
+        let roasts = [
+            "🤡 懒虫特工队", "🦥 树懒都比你们快", "🍗 是不是在偷吃炸鸡？", "📉 运动KPI负数", 
+            "💩 打卡失败 × 核能警告", "👻 你们的腿是租来的吗？", "⚰️ 躺平区UP主", 
+            "🐌 蜗牛看了都摇头", "🧻 再不动就要长蘑菇了", "🔔 羞耻铃铛叮叮叮"
+        ];
+        let randomRoast = roasts[Math.floor(Math.random() * roasts.length)];
+        let report = `🚨 【运动刑场 每日处刑令】 🚨\n\n`;
+        report += `🏅 完成打卡的勇士 (${doneList.length}人)：\n`;
+        doneList.forEach(d => { report += `✅ ${d.name}  (${d.time} 完成)\n`; });
+        report += `\n💩 未打卡的懒虫 (${notDoneList.length}人)：\n`;
+        notDoneList.forEach(n => { report += `❌ ${n}  🙈\n`; });
+        report += `\n🔨 惩罚：每人扣除 ${currentRoom.penaltyPoints} 信誉分！\n`;
+        report += `🤣 ${randomRoast} 请以上懒虫自觉群里发红包/请奶茶!\n`;
+        report += `📸 还不快去运动？打卡入口在“刑场”App！`;
+        return report;
+    }
+    
+    function showReportAndCopy() {
+        let report = generateRoastReport();
+        let previewDiv = document.getElementById('reportPreview');
+        previewDiv.style.display = 'block';
+        previewDiv.innerHTML = `<strong>📋 一键复制以下内容发到微信群👇</strong><br><textarea rows="5" style="width:100%; background:#0f172a; color:white; border-radius:16px;" id="roastTextArea">${report}</textarea><br><button id="copyRoastBtn" class="btn-small">📋 复制嘲讽文案</button>`;
+        document.getElementById('copyRoastBtn').addEventListener('click', () => {
+            let textarea = document.getElementById('roastTextArea');
+            textarea.select();
+            document.execCommand('copy');
+            alert("✅ 嘲讽报告已复制！快去群里处刑懒虫吧 🤡");
+        });
+    }
+
+    // 新赛季/重置当天打卡（保留成员和积分池）
+    function resetSeason() {
+        if(!currentRoom) return;
+        if(confirm("⚡ 开始新的一轮？当日所有未打卡玩家将立刻扣除惩罚分，并重置打卡状态。")) {
+            let today = new Date().toISOString().slice(0,10);
+            let members = Object.values(currentRoom.members);
+            // 扣分：未打卡的扣分
+            members.forEach(m => {
+                let rec = m.checkIns[today];
+                let isDone = rec && rec.done === true;
+                if(!isDone) {
+                    m.creditScore = (m.creditScore || 100) - currentRoom.penaltyPoints;
+                    if(m.creditScore < 0) m.creditScore = 0;
+                }
+                // 重置打卡记录
+                m.checkIns = {};
+            });
+            saveRoom();
+            renderMain();
+            alert("✅ 新赛季开始！未打卡的已经扣过分了，重新做人吧。");
+        }
     }
 
     // 创建房间
     function createRoom() {
-        const roomName = document.getElementById('roomName').value.trim() || "运动赌局";
-        if(pendingMembers.length < 2) {
-            alert("至少需要2位队友才能开局（含你自己）");
-            return;
-        }
-        const uniqueMembers = [...new Map(pendingMembers.map(m => [m.name, m])).values()];
-        const todayStr = new Date().toISOString().slice(0,10);
-        const membersObj = {};
-        uniqueMembers.forEach(m => {
+        let name = document.getElementById('roomName').value.trim() || "运动刑场";
+        let penalty = parseInt(document.getElementById('penaltyPoints').value);
+        if(isNaN(penalty)) penalty = 20;
+        if(pendingMembers.length < 2) { alert("至少2人才能开刑"); return; }
+        let membersObj = {};
+        pendingMembers.forEach(m => {
             membersObj[m.name] = {
                 name: m.name,
-                checkIns: {},   // 格式 "2025-01-01": true
-                lastCheckDate: null
+                creditScore: 100,
+                checkIns: {}
             };
         });
-        const newRoom = {
-            id: generateRoomId(),
-            name: roomName,
-            createdAt: Date.now(),
+        let today = new Date().toISOString().slice(0,10);
+        for(let n in membersObj) { membersObj[n].checkIns[today] = { done: false, time: null, proof: null }; }
+        currentRoom = {
+            id: generateId(),
+            name: name,
+            penaltyPoints: penalty,
             members: membersObj,
-            currentDate: todayStr
+            createdAt: Date.now()
         };
-        // 初始化今日打卡状态均为false
-        for(let name in newRoom.members) {
-            newRoom.members[name].checkIns[todayStr] = false;
-        }
-        localStorage.setItem(`room_${newRoom.id}`, JSON.stringify(newRoom));
-        currentRoom = newRoom;
-        switchToRoomView();
+        saveRoom();
+        document.getElementById('setupPanel').style.display = 'none';
+        document.getElementById('mainPanel').style.display = 'block';
+        renderMain();
     }
 
-    function switchToRoomView() {
-        document.getElementById('roomSetupPanel').style.display = 'none';
-        document.getElementById('mainAppPanel').style.display = 'block';
-        renderRoomUI();
-    }
-
-    function renderRoomUI() {
-        if(!currentRoom) return;
-        document.getElementById('displayRoomName').innerHTML = `🏆 ${escapeHtml(currentRoom.name)}`;
-        document.getElementById('roomCodeDisplay').innerHTML = `📌 房间码: ${currentRoom.id}`;
-        const today = new Date().toISOString().slice(0,10);
-        const membersList = Object.values(currentRoom.members);
-        let checkedCount = 0;
-        membersList.forEach(m => {
-            if(m.checkIns[today] === true) checkedCount++;
-        });
-        const total = membersList.length;
-        const pendingCount = total - checkedCount;
-        document.getElementById('statsText').innerHTML = `✅ 今日打卡 ${checkedCount}/${total} &nbsp;&nbsp; ⚠️ 未打卡 ${pendingCount} 人 · 愿赌服输发红包`;
-        const container = document.getElementById('membersCheckList');
-        container.innerHTML = membersList.map(member => {
-            const isChecked = member.checkIns[today] === true;
-            return `
-                <div class="member-item">
-                    <span style="font-weight:500;">${escapeHtml(member.name)}</span>
-                    <button class="check-btn ${isChecked ? 'checked' : ''}" data-name="${escapeHtml(member.name)}">
-                        ${isChecked ? '✅ 已打卡' : '📆 标记打卡'}
-                    </button>
-                </div>
-            `;
-        }).join('');
-        // 绑定打卡按钮
-        document.querySelectorAll('#membersCheckList .check-btn').forEach(btn => {
+    // 渲染临时列表
+    function renderTempMembers() {
+        let container = document.getElementById('tempMemberList');
+        if(pendingMembers.length === 0) { container.innerHTML = "<div>➕ 添加2人以上</div>"; return; }
+        container.innerHTML = pendingMembers.map((m,idx) => `<div class="flex" style="justify-content:space-between;"><span>🧑‍🤝‍🧑 ${escapeHtml(m.name)}</span><button class="btn-small" data-delidx="${idx}">移除</button></div>`).join('');
+        document.querySelectorAll('[data-delidx]').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const memberName = btn.getAttribute('data-name');
-                if(memberName && currentRoom && currentRoom.members[memberName]) {
-                    const todayStr = new Date().toISOString().slice(0,10);
-                    currentRoom.members[memberName].checkIns[todayStr] = true;
-                    saveRoomToLocal(currentRoom);
-                    renderRoomUI();  // 刷新
-                }
+                let idx = parseInt(btn.getAttribute('data-delidx'));
+                pendingMembers.splice(idx,1);
+                renderTempMembers();
             });
         });
     }
+    
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 
-    // 重置房间 (新的一天 / 新对局)
-    function resetForNewGame() {
-        if(!currentRoom) return;
-        if(confirm("确定要重置为全新一轮吗？所有人的打卡记录将清空（房间成员保留）。")) {
-            const todayStr = new Date().toISOString().slice(0,10);
-            for(let name in currentRoom.members) {
-                currentRoom.members[name].checkIns = {};
-                currentRoom.members[name].checkIns[todayStr] = false;
-            }
-            saveRoomToLocal(currentRoom);
-            renderRoomUI();
-        }
-    }
-
-    function loadRoomById(roomId) {
-        const room = loadRoomFromId(roomId);
-        if(room) {
-            currentRoom = room;
-            switchToRoomView();
-        } else {
-            alert("房间不存在或已失效，请重新创建。");
-        }
-    }
-
-    function escapeHtml(str) {
-        if(!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if(m === '&') return '&amp;';
-            if(m === '<') return '&lt;';
-            if(m === '>') return '&gt;';
-            return m;
-        });
-    }
-
-    // 页面初始化
-    (function() {
-        // 检查URL是否有房间参数 ?room=XXXX
-        const params = new URLSearchParams(window.location.search);
-        const roomParam = params.get('room');
-        if(roomParam) {
-            const foundRoom = loadRoomFromId(roomParam);
-            if(foundRoom) {
-                currentRoom = foundRoom;
-                switchToRoomView();
-                return;
-            }
-        }
-        // 否则显示创建界面
-        document.getElementById('roomSetupPanel').style.display = 'block';
-        document.getElementById('mainAppPanel').style.display = 'none';
-        pendingMembers = [];
+    // 初始化事件
+    document.getElementById('addMemberBtn').addEventListener('click', () => {
+        let name = document.getElementById('memberNameInput').value.trim();
+        if(!name) return alert("填个名字");
+        if(pendingMembers.some(m=>m.name===name)) return alert("重复");
+        pendingMembers.push({name: name});
         renderTempMembers();
-
-        document.getElementById('addMemberBtn').addEventListener('click', () => {
-            const nameInput = document.getElementById('memberNameInput');
-            const name = nameInput.value.trim();
-            if(name === "") {
-                alert("请输入昵称");
-                return;
-            }
-            if(pendingMembers.some(m => m.name === name)) {
-                alert("成员已存在");
-                return;
-            }
-            pendingMembers.push({ name: name });
-            renderTempMembers();
-            nameInput.value = '';
-        });
-        document.getElementById('createRoomBtn').addEventListener('click', createRoom);
-        document.getElementById('resetRoomBtn').addEventListener('click', resetForNewGame);
-    })();
+        document.getElementById('memberNameInput').value = '';
+    });
+    document.getElementById('createRoomBtn').addEventListener('click', createRoom);
+    document.getElementById('resetBtn').addEventListener('click', resetSeason);
+    document.getElementById('genReportBtn').addEventListener('click', showReportAndCopy);
+    
+    // 检查URL参数加载房间
+    let urlRoom = new URLSearchParams(location.search).get('room');
+    if(urlRoom && loadRoom(urlRoom)) {
+        currentRoom = loadRoom(urlRoom);
+        document.getElementById('setupPanel').style.display = 'none';
+        document.getElementById('mainPanel').style.display = 'block';
+        renderMain();
+    } else {
+        renderTempMembers();
+    }
 </script>
 </body>
 </html>
